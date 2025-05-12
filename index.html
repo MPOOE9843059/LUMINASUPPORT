@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Lumina RP - Serveur Fortnite Roleplay</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-    <!-- Police Orbitron pour le titre stylé -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
       :root {
         --primary: #7c3aed;
@@ -139,36 +137,14 @@
         background: rgba(56,189,248,0.18);
         box-shadow: 0 10px 44px #38bdf855, 0 0 32px #7c3aed77;
       }
-      /* --- Titre stylé du code de la map --- */
-      .styled-title {
-        font-family: 'Orbitron', 'Montserrat', Arial, sans-serif;
-        font-size: 1.45rem;
-        letter-spacing: 0.12em;
-        color: #fff;
-        text-transform: uppercase;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.7em;
-        margin-bottom: 0.7rem;
-        font-weight: 900;
-        background: linear-gradient(90deg, #38bdf8 0%, #7c3aed 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        filter: drop-shadow(0 0 8px #38bdf8cc) drop-shadow(0 0 3px #7c3aed99);
-        text-shadow:
-          0 0 8px #38bdf8aa,
-          0 0 2px #7c3aed99;
-        animation: mapTitleGlow 2.5s infinite alternate;
-      }
-      .styled-title i {
-        font-size: 1.2em;
-        color: #38bdf8;
-        filter: drop-shadow(0 0 4px #7c3aed99);
-      }
-      @keyframes mapTitleGlow {
-        0% { filter: drop-shadow(0 0 8px #38bdf8cc) drop-shadow(0 0 3px #7c3aed99); }
-        100% { filter: drop-shadow(0 0 18px #38bdf8) drop-shadow(0 0 10px #7c3aed); }
+      .map-code-title {
+        font-size: 1.18rem;
+        color: var(--secondary);
+        font-weight: bold;
+        letter-spacing: 0.06em;
+        margin-bottom: 0.5rem;
+        text-align: center;
+        text-shadow: 0 2px 10px #38bdf822;
       }
       .map-code-header {
         display: flex;
@@ -239,9 +215,7 @@
         .map-code-bloc { margin-top: 2.2rem !important; }
         .map-value { font-size: 1.13rem; }
         .copy-btn { width: 38px; height: 38px; font-size: 1.1rem; }
-        .styled-title { font-size: 1.05rem; }
       }
-      /* ... (le reste du CSS reste inchangé, galerie, features, support, social, etc.) ... */
       .gallery-section {
         margin: 0 auto 3rem auto;
         max-width: 1100px;
@@ -255,104 +229,273 @@
         text-align: center;
       }
       .gallery-slider {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.2rem;
+      }
+      .gallery-arrow {
+        font-size: 2.2rem;
+        color: var(--primary);
+        background: #23244a;
+        border: none;
+        border-radius: 50%;
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background 0.18s, color 0.18s;
+      }
+      .gallery-arrow:hover {background: var(--primary); color: #fff;}
+      .gallery-imgs {
+        display: flex;
+        gap: 1.2rem;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        width: 100%;
+      }
+      .gallery-imgs img,
+      .gallery-imgs .gallery-video {
+        width: 270px; height: 150px;
+        object-fit: cover;
+        border-radius: 14px;
+        box-shadow: 0 2px 18px #7c3aed55;
+        background: #23244a;
+        cursor: pointer;
+        flex: 0 0 auto;
+        display: block;
+      }
+      .gallery-imgs .gallery-video {
+        padding: 0;
+        border: none;
+        position: relative;
+        overflow: hidden;
+      }
+      .gallery-imgs .gallery-video iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+        border-radius: 14px;
+      }
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 2.2rem;
+        padding: 4rem 2rem 2rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .feature-card {
+        background: rgba(255,255,255,0.07);
+        padding: 2.1rem 1.3rem;
+        border-radius: 18px;
+        text-align: center;
+        box-shadow: 0 2px 18px #38bdf822;
+        transition: transform 0.3s, box-shadow 0.3s;
+        position: relative;
+        overflow: hidden;
+      }
+      .feature-card:hover {
+        transform: translateY(-10px) scale(1.03);
+        box-shadow: 0 8px 32px #38bdf855;
+        border: 2px solid var(--secondary);
+      }
+      .feature-card i {
+        font-size: 3.2rem;
+        margin-bottom: 0.7rem;
+        text-shadow: 0 0 18px #7c3aedcc, 0 0 8px #38bdf8cc;
+      }
+      .feature-card h3 {
+        color: var(--primary);
+        font-size: 1.25rem;
+        margin-bottom: 0.6rem;
+        font-weight: bold;
+        letter-spacing: 0.01em;
+      }
+      .feature-card p {color: #f8fafc;}
+      .feature-card strong {color: #fff; font-weight: 700;}
+      .section {
+        padding: 4rem 2rem 2rem 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .social-links {
+        display: flex;
+        justify-content: center;
+        gap: 2.5rem;
+        font-size: 2.7rem;
+        margin: 2.2rem 0 1.2rem 0;
+      }
+      .social-links a {
+        width: 64px; height: 64px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #23244a 60%, #18192b 100%);
+        display: flex; align-items: center; justify-content: center;
+        color: #fff;
+        box-shadow: 0 2px 24px #7c3aed55;
+        transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.18s;
+        text-shadow: 0 0 18px #7c3aedcc, 0 0 8px #38bdf8cc;
+        font-size: 2.1rem;
+        border: none;
+        outline: none;
+        text-decoration: none;
+      }
+      .social-links a.discord {background: linear-gradient(135deg, #5865F2 60%, #23244a 100%);}
+      .social-links a.youtube {background: linear-gradient(135deg, #FF0000 60%, #23244a 100%);}
+      .social-links a.tiktok {background: #000;}
+      .social-links a:hover, .social-links a:focus {
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        color: #fff;
+        box-shadow: 0 8px 32px #38bdf855, 0 0 18px #7c3aedcc;
+        transform: scale(1.12) rotate(-4deg);
+      }
+      .support-form {
+        background: rgba(44, 47, 73, 0.93);
+        padding: 2.2rem 2rem;
+        border-radius: 18px;
+        max-width: 600px;
+        margin: 0 auto;
+        box-shadow: 0 2px 18px #38bdf822;
+        text-align: center;
+      }
+      .support-form h2 {
+        color: var(--secondary);
+        margin-bottom: 1.2rem;
+        font-size: 1.35rem;
+      }
+      .support-label {
+        display: block;
+        font-size: 1.18rem;
+        color: #fff;
+        font-weight: 700;
+        margin-bottom: 6px;
+        letter-spacing: 0.02em;
+        text-shadow: 0 2px 14px #38bdf8, 0 0 8px #7c3aed99;
+      }
+      .support-label span {
+        color: #e11d48;
+        font-size: 1.15em;
+        text-shadow: none;
+        margin-left: 2px;
+      }
+      .select-wrapper {
         position: relative;
         display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 1rem;
-        max-width: 100%;
+        margin-bottom: 18px;
       }
-      .gallery-imgs {
-        display: flex;
-        gap: 1rem;
-        overflow-x: auto;
-        scroll-behavior: smooth;
-        scroll-snap-type: x mandatory;
-        -webkit-overflow-scrolling: touch;
-        width: 90vw;
-        max-width: 1100px;
-        padding-bottom: 10px;
-        scrollbar-width: thin;
-        scrollbar-color: var(--secondary) transparent;
-      }
-      .gallery-imgs::-webkit-scrollbar {
-        height: 8px;
-      }
-      .gallery-imgs::-webkit-scrollbar-thumb {
-        background-color: var(--secondary);
+      #problem-type {
+        padding-right: 52px;
+        font-size: 1.08rem;
+        background: #f1f4fa;
         border-radius: 10px;
-      }
-      .gallery-imgs::-webkit-scrollbar-track {
-        background: transparent;
-      }
-      .gallery-imgs > * {
-        scroll-snap-align: center;
-        flex: 0 0 auto;
-        width: 270px;
-        height: 150px;
-        border-radius: 14px;
-        box-shadow: 0 2px 18px #7c3aed55;
-        cursor: pointer;
-        background: #23244a;
-        transition: transform 0.3s ease;
-      }
-      .gallery-imgs > *:hover {
-        transform: scale(1.05);
-        box-shadow: 0 4px 36px #38bdf855, 0 0 24px #7c3aed77;
-      }
-      .gallery-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(24, 25, 43, 0.7);
         border: none;
-        border-radius: 50%;
-        width: 44px;
-        height: 44px;
-        color: var(--primary);
-        font-size: 1.8rem;
-        cursor: pointer;
-        box-shadow: 0 2px 12px #7c3aed55;
-        transition: background 0.3s, color 0.3s, transform 0.2s;
-        z-index: 10;
+        box-shadow: 0 2px 8px #7c3aed33;
+        outline: none;
+        width: 100%;
+        min-height: 48px;
+        appearance: none;
+        color: #18192b;
+      }
+      #problem-type:focus {
+        background: #e9f3fc;
+        box-shadow: 0 0 0 2.5px var(--secondary);
+      }
+      #problem-type option {
+        background: #f1f4fa !important;
+        color: #18192b !important;
+      }
+      .select-emoji {
+        position: absolute;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 48px;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
+        font-size: 1.7rem;
+        color: var(--primary);
+        pointer-events: none;
+        filter: drop-shadow(0 2px 8px #7c3aed33);
+        background: none;
+        z-index: 2;
       }
-      .gallery-arrow:hover,
-      .gallery-arrow:focus {
-        background: var(--primary);
-        color: #fff;
-        transform: translateY(-50%) scale(1.1);
+      .support-row {
+        display: flex;
+        gap: 4%;
+        margin-bottom: 18px;
+      }
+      .support-row input {
+        width: 48%;
+      }
+      #supportForm input, #supportForm textarea {
+        font-size: 1.09rem;
+        border: none;
+        border-radius: 10px;
+        padding: 14px 14px;
+        background: #23244a;
+        color: #f8fafc;
+        transition: box-shadow 0.2s, background 0.2s;
+        box-shadow: 0 2px 8px #7c3aed33;
         outline: none;
+        width: 100%;
+        box-sizing: border-box;
       }
-      #galleryPrev {
-        left: 8px;
+      #supportForm input:focus, #supportForm textarea:focus {
+        background: #2d2e4a;
+        box-shadow: 0 0 0 2.5px var(--secondary);
       }
-      #galleryNext {
-        right: 8px;
+      #supportForm textarea { min-height: 110px; resize: vertical; }
+      #supportForm input::placeholder, #supportForm textarea::placeholder {
+        color: #b7cfff;
+        opacity: 1;
+        font-weight: 500;
+        letter-spacing: 0.01em;
       }
-      @media (max-width: 700px) {
-        .gallery-imgs {
-          width: 95vw;
-        }
-        .gallery-imgs > * {
-          width: 220px;
-          height: 120px;
-        }
-        .gallery-arrow {
-          width: 36px;
-          height: 36px;
-          font-size: 1.3rem;
-        }
-        #galleryPrev {
-          left: 4px;
-        }
-        #galleryNext {
-          right: 4px;
-        }
+      #supportForm button.copy-btn {
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.25rem;
+        font-weight: bold;
+        letter-spacing: 0.04em;
+        box-shadow: 0 2px 16px #7c3aed55;
+        transition: background 0.3s, transform 0.18s;
+        cursor: pointer;
+        outline: none;
+        min-width: 180px;
+        min-height: 58px;
+        max-width: 340px;
+        width: 100%;
+        display: flex; align-items: center; justify-content: center;
+        gap: 12px;
+        margin: 24px auto 0 auto;
+        font-family: inherit;
       }
-      /* ... (features, support, social, etc. inchangé) ... */
+      #supportForm button.copy-btn:active {transform: scale(0.97);}
+      #supportForm .tips {color: var(--secondary);}
+      #feedback {
+        border-radius: 8px;
+        font-size: 1.07rem;
+        padding: 10px 8px;
+        margin-top: 8px;
+        min-height: 24px;
+        text-align: center;
+        font-weight: 600;
+        background: rgba(56,189,248,0.07);
+        color: var(--primary);
+        box-shadow: 0 2px 10px #38bdf822;
+        transition: background 0.2s, color 0.2s;
+      }
+      #feedback.success { background: #e4ffe0; color: #237b1f; }
+      #feedback.error { background: #ffe4e4; color: #b22222; }
+      #feedback.info { background: #e0e6f1; color: #4f7cff; }
     </style>
 </head>
 <body>
@@ -374,10 +517,7 @@
             <span style="color:#38bdf8;font-weight:700;">Rejoignez l'expérience communautaire ultime !</span>
         </div>
         <div id="map-code-bloc" class="map-code-bloc">
-            <div class="map-code-title styled-title">
-                <i class="fas fa-map-marked-alt"></i>
-                <span>Code de la map</span>
-            </div>
+            <div class="map-code-title">Code de la map</div>
             <div class="map-code-header">
                 <span class="map-value" id="mapCode">0000-0000-0000</span>
                 <button class="copy-btn" id="copyBtn" title="Copier le code">
@@ -389,28 +529,40 @@
     </section>
 
     <section id="gallery" class="gallery-section">
-      <div class="gallery-title">Galerie du serveur</div>
-      <div class="gallery-slider">
-        <button class="gallery-arrow" id="galleryPrev" type="button" aria-label="Image précédente">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <div class="gallery-imgs" id="galleryImgs" tabindex="0" aria-live="polite" aria-label="Galerie d'images et vidéos">
-          <img src="https://media.discordapp.net/attachments/1365769100286103604/1368353780969640077/image.png?ex=68231f04&is=6821cd84&hm=c5c691bafc497e1cda7ee9e7c1213a65cfe06cc9f4c0bbf17c61893ab2110e5e&=&format=webp&quality=lossless&width=626&height=833" alt="Image 1 Lumina RP" />
-          <img src="https://media.discordapp.net/attachments/1365769100286103604/1368940567077191750/image.png?ex=68229e80&is=68214d00&hm=e761ce9e2b9915a1c00d3c24cbea2d1cb5203162d358dc407bd9ef3d592c531f&=&format=webp&quality=lossless&width=605&height=359" alt="Image 2 Lumina RP" />
-          <div class="gallery-video" role="group" aria-label="Vidéo Le Restaurant 'Quikc'">
-            <iframe src="https://www.youtube.com/embed/i1l-WeFsvxE" title="Le Restaurant 'Quikc' du serveur Lumina RP sur Fortnite" allowfullscreen></iframe>
-          </div>
-          <div class="gallery-video" role="group" aria-label="Vidéo Lumina RP">
-            <iframe src="https://www.youtube.com/embed/TGyiRk0ASIQ" title="Vidéo Lumina RP" allowfullscreen></iframe>
-          </div>
+        <div class="gallery-title">Galerie du serveur</div>
+        <div class="gallery-slider">
+            <button class="gallery-arrow" id="galleryPrev" type="button">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="gallery-imgs" id="galleryImgs">
+                <img
+                  src="https://media.discordapp.net/attachments/1365769100286103604/1368353780969640077/image.png?ex=68231f04&is=6821cd84&hm=c5c691bafc497e1cda7ee9e7c1213a65cfe06cc9f4c0bbf17c61893ab2110e5e&=&format=webp&quality=lossless&width=626&height=833"
+                  alt="Image 1 Lumina RP"
+                />
+                <img
+                  src="https://media.discordapp.net/attachments/1365769100286103604/1368940567077191750/image.png?ex=68229e80&is=68214d00&hm=e761ce9e2b9915a1c00d3c24cbea2d1cb5203162d358dc407bd9ef3d592c531f&=&format=webp&quality=lossless&width=605&height=359"
+                  alt="Image 2 Lumina RP"
+                />
+                <div class="gallery-video">
+                    <iframe
+                      src="https://www.youtube.com/embed/i1l-WeFsvxE"
+                      title="Le Restaurant 'Quikc' du serveur Lumina RP sur Fortnite"
+                      allowfullscreen
+                    ></iframe>
+                </div>
+                <div class="gallery-video">
+                    <iframe
+                      src="https://www.youtube.com/embed/TGyiRk0ASIQ"
+                      title="Vidéo Lumina RP"
+                      allowfullscreen
+                    ></iframe>
+                </div>
+            </div>
+            <button class="gallery-arrow" id="galleryNext" type="button">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
-        <button class="gallery-arrow" id="galleryNext" type="button" aria-label="Image suivante">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-      </div>
     </section>
-
-    <!-- Le reste du code (features, support, social, etc.) reste inchangé -->
 
     <section id="features" class="section">
         <div class="features-grid">
@@ -554,18 +706,12 @@
       }
       animateStars();
 
-      // Galerie slider esthétique
-      const galleryImgs = document.getElementById('galleryImgs');
-      const btnPrev = document.getElementById('galleryPrev');
-      const btnNext = document.getElementById('galleryNext');
-      const scrollAmount = 280; // largeur + gap approximatif
-
-      btnPrev.addEventListener('click', () => {
-        galleryImgs.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+      // Galerie slider
+      document.getElementById('galleryPrev').addEventListener('click', function () {
+        document.getElementById('galleryImgs').scrollBy({ left: -300, behavior: 'smooth' });
       });
-
-      btnNext.addEventListener('click', () => {
-        galleryImgs.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+      document.getElementById('galleryNext').addEventListener('click', function () {
+        document.getElementById('galleryImgs').scrollBy({ left: 300, behavior: 'smooth' });
       });
 
       // Bloc code map : copie
