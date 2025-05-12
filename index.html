@@ -1,860 +1,1035 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Lumina RP - Serveur Fortnite Roleplay</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-    <style>
-      :root {
-        --primary: #7c3aed;
-        --secondary: #38bdf8;
-        --dark: #18192b;
-      }
-      body {
-        margin: 0;
-        font-family: 'Segoe UI', 'Montserrat', Arial, sans-serif;
-        background: var(--dark);
-        color: #f8fafc;
-        min-height: 100vh;
-        position: relative;
-        overflow-x: hidden;
-      }
-      #stars-bg {
-        position: fixed;
-        z-index: 0;
-        top: 0; left: 0; width: 100vw; height: 100vh;
-        pointer-events: none;
-        background: transparent;
-      }
-      nav {
-        position: fixed;
-        top: 0; left: 0; width: 100vw;
-        background: rgba(24,25,43,0.88);
-        backdrop-filter: blur(10px);
-        z-index: 1000;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lumina RP - Serveur Fortnite Roleplay</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #7c3aed;
+      --secondary: #38bdf8;
+      --dark: #18192b;
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', 'Montserrat', Arial, sans-serif;
+      background: var(--dark);
+      color: #f8fafc;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    #stars-bg {
+      position: fixed;
+      z-index: 0;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      background: transparent;
+    }
+    nav {
+      position: fixed;
+      top: 0; left: 0; width: 100vw;
+      background: rgba(24,25,43,0.88);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      transition: height 0.3s;
+    }
+    nav .nav-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0;
+      position: relative;
+    }
+    nav ul {
+      display: flex;
+      justify-content: center;
+      gap: 2.3rem;
+      list-style: none;
+      margin: 0;
+      padding: 1.1rem 0.5rem 0.7rem 0.5rem;
+      transition: max-height 0.3s;
+    }
+    nav a {
+      color: #f8fafc;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.15rem;
+      border-radius: 12px;
+      transition: color 0.25s, background 0.25s;
+      padding: 8px 16px;
+    }
+    nav a:hover, nav a.active {
+      color: var(--secondary);
+      background: rgba(56,189,248,0.09);
+    }
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 2rem;
+      position: absolute;
+      left: 1rem;
+      top: 0.9rem;
+      z-index: 1100;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .nav-toggle:focus { outline: 2px solid var(--secondary); }
+    @media (max-width: 800px) {
+      nav .nav-content {
+        flex-direction: row;
+        justify-content: flex-end;
+        padding-right: 0.5rem;
       }
       nav ul {
-        display: flex;
-        justify-content: center;
-        gap: 2.3rem;
-        list-style: none;
+        flex-direction: column;
+        align-items: flex-start;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(24,25,43,0.98);
+        width: 100vw;
+        max-height: 0;
+        overflow: hidden;
+        padding: 0;
         margin: 0;
-        padding: 1.1rem 0.5rem 0.7rem 0.5rem;
+        border-bottom-left-radius: 18px;
+        border-bottom-right-radius: 18px;
+        box-shadow: 0 8px 32px #38bdf855;
+        transition: max-height 0.3s;
+      }
+      nav ul.open {
+        max-height: 340px;
+        padding: 0.7rem 0.5rem 0.7rem 0.5rem;
+      }
+      nav ul li {
+        width: 100%;
+        margin: 0.3rem 0;
       }
       nav a {
-        color: #f8fafc;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 1.15rem;
-        border-radius: 12px;
-        transition: color 0.25s, background 0.25s;
-        padding: 8px 16px;
-      }
-      nav a:hover, nav a.active {
-        color: var(--secondary);
-        background: rgba(56,189,248,0.09);
-      }
-      .hero {
-        padding: 6rem 2rem 3.5rem 2rem;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-        z-index: 1;
-      }
-      .hero-title {
-        font-size: 4rem;
-        font-weight: bold;
-        letter-spacing: 0.08em;
-        margin: 0 auto 0.7rem auto;
-        background: linear-gradient(270deg, #7c3aed, #38bdf8, #f472b6, #facc15, #7c3aed);
-        background-size: 1800% 1800%;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 0 12px #7c3aed88, 0 0 18px #38bdf888, 0 0 2px #fff;
-        animation: rainbowGlow 7s linear infinite, floatTitle 4s ease-in-out infinite;
-        will-change: filter, text-shadow, background-position, transform;
-        transition: text-shadow 0.3s;
-      }
-      @keyframes rainbowGlow {
-        0% {background-position: 0% 50%;}
-        50% {background-position: 100% 50%;}
-        100% {background-position: 0% 50%;}
-      }
-      @keyframes floatTitle {
-        0%,100% {transform: translateY(0);}
-        20% {transform: translateY(-7px);}
-        40% {transform: translateY(3px);}
-        60% {transform: translateY(-4px);}
-        80% {transform: translateY(2px);}
-      }
-      .hero-slogan {
-        font-size: 1.35rem;
-        margin-bottom: 1.8rem;
-        color: #b7cfff;
-        font-weight: 500;
-        letter-spacing: 0.02em;
-        text-shadow: 0 2px 12px #38bdf855;
-        animation: fadeSlogan 2.5s cubic-bezier(.5,1.6,.7,1.1);
-      }
-      @keyframes fadeSlogan {
-        from {opacity: 0; transform: translateY(20px);}
-        to   {opacity: 1; transform: translateY(0);}
-      }
-      .map-code-bloc {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0.7rem;
-        margin: 3.2rem auto 0 auto;
-        padding: 1.6rem 2.5rem 1.2rem 2.5rem;
-        background: rgba(56,189,248,0.13);
-        border-radius: 22px;
-        box-shadow: 0 4px 32px #7c3aed33, 0 0 24px #38bdf822;
-        border: 2.5px solid var(--secondary);
-        max-width: 420px;
-        position: relative;
-        transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
-        user-select: all;
-        cursor: default;
-        will-change: transform;
-        overflow: hidden;
-        z-index: 1;
-      }
-      .map-code-bloc::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: 22px;
-        pointer-events: none;
-        box-shadow: 0 0 44px 8px #38bdf822, 0 0 18px 2px #7c3aed33;
-        z-index: 0;
-        opacity: 0.7;
-      }
-      .map-code-bloc:hover {
-        transform: translateY(-3px) scale(1.025);
-        background: rgba(56,189,248,0.18);
-        box-shadow: 0 10px 44px #38bdf855, 0 0 32px #7c3aed77;
-      }
-      .map-code-title {
-        font-size: 1.18rem;
-        color: var(--secondary);
-        font-weight: bold;
-        letter-spacing: 0.06em;
-        margin-bottom: 0.5rem;
-        text-align: center;
-        text-shadow: 0 2px 10px #38bdf822;
-      }
-      .map-code-header {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1.2rem;
+        display: block;
         width: 100%;
+        font-size: 1.12rem;
+        padding: 12px 18px;
       }
-      .map-value {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        font-size: 2.1rem;
-        font-weight: bold;
-        letter-spacing: 3px;
-        color: #fff;
-        background: linear-gradient(90deg, var(--secondary), var(--primary));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        text-shadow: 0 2px 12px #7c3aed77;
-        transition: color 0.2s, text-shadow 0.2s;
-        cursor: pointer;
-        user-select: all;
-        text-align: center;
+      .nav-toggle {
+        display: block;
       }
-      .map-value.copied {
-        color: #38bdf8 !important;
-        background: none !important;
-        -webkit-background-clip: initial !important;
-        -webkit-text-fill-color: initial !important;
-        text-shadow: 0 0 18px #38bdf8cc, 0 0 8px #7c3aedcc;
-        transition: color 0.2s, text-shadow 0.2s;
+    }
+    .hero {
+      padding: 6rem 2rem 3.5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .hero-title {
+      font-size: 4rem;
+      font-weight: bold;
+      letter-spacing: 0.08em;
+      margin: 0 auto 0.7rem auto;
+      background: linear-gradient(270deg, #7c3aed, #38bdf8, #f472b6, #facc15, #7c3aed);
+      background-size: 1800% 1800%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 12px #7c3aed88, 0 0 18px #38bdf888, 0 0 2px #fff;
+      animation: rainbowGlow 7s linear infinite, floatTitle 4s ease-in-out infinite;
+      will-change: filter, text-shadow, background-position, transform;
+      transition: text-shadow 0.3s;
+    }
+    @keyframes rainbowGlow {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    @keyframes floatTitle {
+      0%,100% {transform: translateY(0);}
+      20% {transform: translateY(-7px);}
+      40% {transform: translateY(3px);}
+      60% {transform: translateY(-4px);}
+      80% {transform: translateY(2px);}
+    }
+    .hero-slogan {
+      font-size: 1.35rem;
+      margin-bottom: 1.8rem;
+      color: #b7cfff;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      text-shadow: 0 2px 12px #38bdf855;
+      animation: fadeSlogan 2.5s cubic-bezier(.5,1.6,.7,1.1);
+    }
+    @keyframes fadeSlogan {
+      from {opacity: 0; transform: translateY(20px);}
+      to   {opacity: 1; transform: translateY(0);}
+    }
+    .map-code-bloc {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7rem;
+      margin: 3.2rem auto 0 auto;
+      padding: 1.6rem 2.5rem 1.2rem 2.5rem;
+      background: rgba(56,189,248,0.13);
+      border-radius: 22px;
+      box-shadow: 0 4px 32px #7c3aed33, 0 0 24px #38bdf822;
+      border: 2.5px solid var(--secondary);
+      max-width: 420px;
+      position: relative;
+      transition: transform 0.18s, box-shadow 0.18s, background 0.18s;
+      user-select: all;
+      cursor: default;
+      will-change: transform;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .map-code-bloc::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      pointer-events: none;
+      box-shadow: 0 0 44px 8px #38bdf822, 0 0 18px 2px #7c3aed33;
+      z-index: 0;
+      opacity: 0.7;
+    }
+    .map-code-bloc:hover {
+      transform: translateY(-3px) scale(1.025);
+      background: rgba(56,189,248,0.18);
+      box-shadow: 0 10px 44px #38bdf855, 0 0 32px #7c3aed77;
+    }
+    .styled-title {
+      font-family: 'Orbitron', 'Montserrat', Arial, sans-serif;
+      font-size: 1.45rem;
+      letter-spacing: 0.12em;
+      color: #fff;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7em;
+      margin-bottom: 0.7rem;
+      font-weight: 900;
+      background: linear-gradient(90deg, #38bdf8 0%, #7c3aed 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 8px #38bdf8cc) drop-shadow(0 0 3px #7c3aed99);
+      text-shadow:
+        0 0 8px #38bdf8aa,
+        0 0 2px #7c3aed99;
+      animation: mapTitleGlow 2.5s infinite alternate;
+    }
+    .styled-title i {
+      font-size: 1.2em;
+      color: #38bdf8;
+      filter: drop-shadow(0 0 4px #7c3aed99);
+    }
+    @keyframes mapTitleGlow {
+      0% { filter: drop-shadow(0 0 8px #38bdf8cc) drop-shadow(0 0 3px #7c3aed99); }
+      100% { filter: drop-shadow(0 0 18px #38bdf8) drop-shadow(0 0 10px #7c3aed); }
+    }
+    .map-code-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.2rem;
+      width: 100%;
+    }
+    .map-value {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      font-size: 2.1rem;
+      font-weight: bold;
+      letter-spacing: 3px;
+      color: #fff;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 12px #7c3aed77;
+      transition: color 0.2s, text-shadow 0.2s;
+      cursor: pointer;
+      user-select: all;
+      text-align: center;
+    }
+    .map-value.copied {
+      color: #38bdf8 !important;
+      background: none !important;
+      -webkit-background-clip: initial !important;
+      -webkit-text-fill-color: initial !important;
+      text-shadow: 0 0 18px #38bdf8cc, 0 0 8px #7c3aedcc;
+      transition: color 0.2s, text-shadow 0.2s;
+    }
+    .copy-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      border-radius: 50%;
+      width: 48px; height: 48px;
+      box-shadow: 0 2px 12px #7c3aed55;
+      margin-left: 1rem;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.18s;
+      border: none;
+      outline: none;
+      position: relative;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .copy-btn:active {transform: scale(0.96);}
+    .copy-btn i { pointer-events: none; }
+    .copy-confirm {
+      color: #38bdf8;
+      font-size: 1.05rem;
+      font-weight: bold;
+      margin-top: 0.7rem;
+      display: none;
+      z-index: 2;
+      text-align: center;
+    }
+    @media (max-width: 700px) {
+      .hero-title { font-size: 2.1rem; }
+      .hero-slogan { font-size: 1.01rem; }
+      .map-code-bloc { margin-top: 2.2rem !important; }
+      .map-value { font-size: 1.13rem; }
+      .copy-btn { width: 38px; height: 38px; font-size: 1.1rem; }
+      .styled-title { font-size: 1.05rem; }
+    }
+    .gallery-section {
+      margin: 0 auto 3rem auto;
+      max-width: 1100px;
+      padding: 2.2rem 1rem 1.2rem 1rem;
+    }
+    .gallery-title {
+      font-size: 1.5rem;
+      color: var(--secondary);
+      font-weight: bold;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    .gallery-slider {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      max-width: 100%;
+    }
+    .gallery-imgs {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      width: 90vw;
+      max-width: 1100px;
+      padding-bottom: 10px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--secondary) transparent;
+    }
+    .gallery-imgs::-webkit-scrollbar {
+      height: 8px;
+    }
+    .gallery-imgs::-webkit-scrollbar-thumb {
+      background-color: var(--secondary);
+      border-radius: 10px;
+    }
+    .gallery-imgs::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .gallery-imgs > * {
+      scroll-snap-align: center;
+      flex: 0 0 auto;
+      width: 270px;
+      height: 150px;
+      border-radius: 14px;
+      box-shadow: 0 2px 18px #7c3aed55;
+      cursor: pointer;
+      background: #23244a;
+      transition: transform 0.3s ease;
+    }
+    .gallery-imgs > *:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 36px #38bdf855, 0 0 24px #7c3aed77;
+    }
+    .gallery-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(24, 25, 43, 0.7);
+      border: none;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      color: var(--primary);
+      font-size: 1.8rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #7c3aed55;
+      transition: background 0.3s, color 0.3s, transform 0.2s, opacity 0.2s;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .gallery-arrow[disabled] {
+      opacity: 0.3;
+      pointer-events: none;
+      filter: grayscale(1);
+    }
+    .gallery-arrow:hover,
+    .gallery-arrow:focus {
+      background: var(--primary);
+      color: #fff;
+      transform: translateY(-50%) scale(1.1);
+      outline: none;
+    }
+    #galleryPrev {
+      left: 8px;
+    }
+    #galleryNext {
+      right: 8px;
+    }
+    @media (max-width: 700px) {
+      .gallery-imgs {
+        width: 95vw;
       }
-      .copy-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.6rem;
-        background: linear-gradient(90deg, var(--primary), var(--secondary));
-        color: #fff;
-        border-radius: 50%;
-        width: 48px; height: 48px;
-        box-shadow: 0 2px 12px #7c3aed55;
-        margin-left: 1rem;
-        cursor: pointer;
-        transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.18s;
-        border: none;
-        outline: none;
-        position: relative;
-        opacity: 1;
-        pointer-events: auto;
-      }
-      .copy-btn:active {transform: scale(0.96);}
-      .copy-btn i { pointer-events: none; }
-      .copy-confirm {
-        color: #38bdf8;
-        font-size: 1.05rem;
-        font-weight: bold;
-        margin-top: 0.7rem;
-        display: none;
-        z-index: 2;
-        text-align: center;
-      }
-      @media (max-width: 700px) {
-        .hero-title { font-size: 2.1rem; }
-        .hero-slogan { font-size: 1.01rem; }
-        .map-code-bloc { margin-top: 2.2rem !important; }
-        .map-value { font-size: 1.13rem; }
-        .copy-btn { width: 38px; height: 38px; font-size: 1.1rem; }
-      }
-      .gallery-section {
-        margin: 0 auto 3rem auto;
-        max-width: 1100px;
-        padding: 2.2rem 1rem 1.2rem 1rem;
-      }
-      .gallery-title {
-        font-size: 1.5rem;
-        color: var(--secondary);
-        font-weight: bold;
-        margin-bottom: 1rem;
-        text-align: center;
-      }
-      .gallery-slider {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 1.2rem;
+      .gallery-imgs > * {
+        width: 220px;
+        height: 120px;
       }
       .gallery-arrow {
-        font-size: 2.2rem;
-        color: var(--primary);
-        background: #23244a;
-        border: none;
-        border-radius: 50%;
-        width: 48px;
-        height: 48px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: background 0.18s, color 0.18s;
+        width: 36px;
+        height: 36px;
+        font-size: 1.3rem;
       }
-      .gallery-arrow:hover {background: var(--primary); color: #fff;}
-      .gallery-imgs {
-        display: flex;
-        gap: 1.2rem;
-        overflow-x: auto;
-        scroll-behavior: smooth;
-        width: 100%;
+      #galleryPrev {
+        left: 4px;
       }
-      .gallery-imgs img,
-      .gallery-imgs .gallery-video {
-        width: 270px; height: 150px;
-        object-fit: cover;
-        border-radius: 14px;
-        box-shadow: 0 2px 18px #7c3aed55;
-        background: #23244a;
-        cursor: pointer;
-        flex: 0 0 auto;
-        display: block;
+      #galleryNext {
+        right: 4px;
       }
-      .gallery-imgs .gallery-video {
-        padding: 0;
-        border: none;
-        position: relative;
-        overflow: hidden;
-      }
-      .gallery-imgs .gallery-video iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        display: block;
-        border-radius: 14px;
-      }
-      .features-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        gap: 2.2rem;
-        padding: 4rem 2rem 2rem 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-      .feature-card {
-        background: rgba(255,255,255,0.07);
-        padding: 2.1rem 1.3rem;
-        border-radius: 18px;
-        text-align: center;
-        box-shadow: 0 2px 18px #38bdf822;
-        transition: transform 0.3s, box-shadow 0.3s;
-        position: relative;
-        overflow: hidden;
-      }
-      .feature-card:hover {
-        transform: translateY(-10px) scale(1.03);
-        box-shadow: 0 8px 32px #38bdf855;
-        border: 2px solid var(--secondary);
-      }
-      .feature-card i {
-        font-size: 3.2rem;
-        margin-bottom: 0.7rem;
-        text-shadow: 0 0 18px #7c3aedcc, 0 0 8px #38bdf8cc;
-      }
-      .feature-card h3 {
-        color: var(--primary);
-        font-size: 1.25rem;
-        margin-bottom: 0.6rem;
-        font-weight: bold;
-        letter-spacing: 0.01em;
-      }
-      .feature-card p {color: #f8fafc;}
-      .feature-card strong {color: #fff; font-weight: 700;}
-      .section {
-        padding: 4rem 2rem 2rem 2rem;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-      .social-links {
-        display: flex;
-        justify-content: center;
-        gap: 2.5rem;
-        font-size: 2.7rem;
-        margin: 2.2rem 0 1.2rem 0;
-      }
-      .social-links a {
-        width: 64px; height: 64px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #23244a 60%, #18192b 100%);
-        display: flex; align-items: center; justify-content: center;
-        color: #fff;
-        box-shadow: 0 2px 24px #7c3aed55;
-        transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.18s;
-        text-shadow: 0 0 18px #7c3aedcc, 0 0 8px #38bdf8cc;
-        font-size: 2.1rem;
-        border: none;
-        outline: none;
-        text-decoration: none;
-      }
-      .social-links a.discord {background: linear-gradient(135deg, #5865F2 60%, #23244a 100%);}
-      .social-links a.youtube {background: linear-gradient(135deg, #FF0000 60%, #23244a 100%);}
-      .social-links a.tiktok {background: #000;}
-      .social-links a:hover, .social-links a:focus {
-        background: linear-gradient(90deg, var(--primary), var(--secondary));
-        color: #fff;
-        box-shadow: 0 8px 32px #38bdf855, 0 0 18px #7c3aedcc;
-        transform: scale(1.12) rotate(-4deg);
-      }
-      .support-form {
-        background: rgba(44, 47, 73, 0.93);
-        padding: 2.2rem 2rem;
-        border-radius: 18px;
-        max-width: 600px;
-        margin: 0 auto;
-        box-shadow: 0 2px 18px #38bdf822;
-        text-align: center;
-      }
-      .support-form h2 {
-        color: var(--secondary);
-        margin-bottom: 1.2rem;
-        font-size: 1.35rem;
-      }
-      .support-label {
-        display: block;
-        font-size: 1.18rem;
-        color: #fff;
-        font-weight: 700;
-        margin-bottom: 6px;
-        letter-spacing: 0.02em;
-        text-shadow: 0 2px 14px #38bdf8, 0 0 8px #7c3aed99;
-      }
-      .support-label span {
-        color: #e11d48;
-        font-size: 1.15em;
-        text-shadow: none;
-        margin-left: 2px;
-      }
-      .select-wrapper {
-        position: relative;
-        display: flex;
-        align-items: center;
-        margin-bottom: 18px;
-      }
-      #problem-type {
-        padding-right: 52px;
-        font-size: 1.08rem;
-        background: #f1f4fa;
-        border-radius: 10px;
-        border: none;
-        box-shadow: 0 2px 8px #7c3aed33;
-        outline: none;
-        width: 100%;
-        min-height: 48px;
-        appearance: none;
-        color: #18192b;
-      }
-      #problem-type:focus {
-        background: #e9f3fc;
-        box-shadow: 0 0 0 2.5px var(--secondary);
-      }
-      #problem-type option {
-        background: #f1f4fa !important;
-        color: #18192b !important;
-      }
-      .select-emoji {
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        width: 48px;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.7rem;
-        color: var(--primary);
-        pointer-events: none;
-        filter: drop-shadow(0 2px 8px #7c3aed33);
-        background: none;
-        z-index: 2;
-      }
-      .support-row {
-        display: flex;
-        gap: 4%;
-        margin-bottom: 18px;
-      }
-      .support-row input {
-        width: 48%;
-      }
-      #supportForm input, #supportForm textarea {
-        font-size: 1.09rem;
-        border: none;
-        border-radius: 10px;
-        padding: 14px 14px;
-        background: #23244a;
-        color: #f8fafc;
-        transition: box-shadow 0.2s, background 0.2s;
-        box-shadow: 0 2px 8px #7c3aed33;
-        outline: none;
-        width: 100%;
-        box-sizing: border-box;
-      }
-      #supportForm input:focus, #supportForm textarea:focus {
-        background: #2d2e4a;
-        box-shadow: 0 0 0 2.5px var(--secondary);
-      }
-      #supportForm textarea { min-height: 110px; resize: vertical; }
-      #supportForm input::placeholder, #supportForm textarea::placeholder {
-        color: #b7cfff;
-        opacity: 1;
-        font-weight: 500;
-        letter-spacing: 0.01em;
-      }
-      #supportForm button.copy-btn {
-        background: linear-gradient(90deg, var(--primary), var(--secondary));
-        color: #fff;
-        border: none;
-        border-radius: 10px;
-        font-size: 1.25rem;
-        font-weight: bold;
-        letter-spacing: 0.04em;
-        box-shadow: 0 2px 16px #7c3aed55;
-        transition: background 0.3s, transform 0.18s;
-        cursor: pointer;
-        outline: none;
-        min-width: 180px;
-        min-height: 58px;
-        max-width: 340px;
-        width: 100%;
-        display: flex; align-items: center; justify-content: center;
-        gap: 12px;
-        margin: 24px auto 0 auto;
-        font-family: inherit;
-      }
-      #supportForm button.copy-btn:active {transform: scale(0.97);}
-      #supportForm .tips {color: var(--secondary);}
-      #feedback {
-        border-radius: 8px;
-        font-size: 1.07rem;
-        padding: 10px 8px;
-        margin-top: 8px;
-        min-height: 24px;
-        text-align: center;
-        font-weight: 600;
-        background: rgba(56,189,248,0.07);
-        color: var(--primary);
-        box-shadow: 0 2px 10px #38bdf822;
-        transition: background 0.2s, color 0.2s;
-      }
-      #feedback.success { background: #e4ffe0; color: #237b1f; }
-      #feedback.error { background: #ffe4e4; color: #b22222; }
-      #feedback.info { background: #e0e6f1; color: #4f7cff; }
-    </style>
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2.2rem;
+      padding: 4rem 2rem 2rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.07);
+      padding: 2.1rem 1.3rem;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 2px 18px #38bdf822;
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card:hover {
+      transform: translateY(-10px) scale(1.03);
+      box-shadow: 0 8px 32px #38bdf855;
+      border: 2px solid var(--secondary);
+    }
+    .feature-card i {
+      font-size: 3.2rem;
+      margin-bottom: 0.7rem;
+      text-shadow: 0 0 18px #7c3aedcc, 0 0 8px #38bdf8cc;
+    }
+    .feature-card h3 {
+      color: var(--primary);
+      font-size: 1.25rem;
+      margin-bottom: 0.6rem;
+      font-weight: bold;
+      letter-spacing: 0.01em;
+    }
+    .feature-card p {color: #f8fafc;}
+    .feature-card strong {color: #fff; font-weight: 700;}
+    .section {
+      padding: 4rem 2rem 2rem 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      font-size: 2.7rem;
+      margin: 2.2rem 0 1.2rem 0;
+    }
+    .social-links a {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #23244a 60%, #18192b 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff;
+      box-shadow: 0 2px 24px #7c3aed55;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s, transform 0.18s;
+      text-shadow: 0 0 18px #7c3aedcc, 0 0 8px #38bdf8cc;
+      font-size: 2.1rem;
+      border: none;
+      outline: none;
+      text-decoration: none;
+    }
+    .social-links a.discord {background: linear-gradient(135deg, #5865F2 60%, #23244a 100%);}
+    .social-links a.youtube {background: linear-gradient(135deg, #FF0000 60%, #23244a 100%);}
+    .social-links a.tiktok {background: #000;}
+    .social-links a:hover, .social-links a:focus {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      box-shadow: 0 8px 32px #38bdf855, 0 0 18px #7c3aedcc;
+      transform: scale(1.12) rotate(-4deg);
+    }
+    .support-form {
+      background: rgba(44, 47, 73, 0.93);
+      padding: 2.2rem 2rem;
+      border-radius: 18px;
+      max-width: 600px;
+      margin: 0 auto;
+      box-shadow: 0 2px 18px #38bdf822;
+      text-align: center;
+    }
+    .support-form h2 {
+      color: var(--secondary);
+      margin-bottom: 1.2rem;
+      font-size: 1.35rem;
+    }
+    .support-label {
+      display: block;
+      font-size: 1.18rem;
+      color: #fff;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+      text-shadow: 0 2px 14px #38bdf8, 0 0 8px #7c3aed99;
+    }
+    .support-label span {
+      color: #e11d48;
+      font-size: 1.15em;
+      text-shadow: none;
+      margin-left: 2px;
+    }
+    .select-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    #problem-type {
+      padding-right: 52px;
+      font-size: 1.08rem;
+      background: #f1f4fa;
+      border-radius: 10px;
+      border: none;
+      box-shadow: 0 2px 8px #7c3aed33;
+      outline: none;
+      width: 100%;
+      min-height: 48px;
+      appearance: none;
+      color: #18192b;
+    }
+    #problem-type:focus {
+      background: #e9f3fc;
+      box-shadow: 0 0 0 2.5px var(--secondary);
+    }
+    #problem-type option {
+      background: #f1f4fa !important;
+      color: #18192b !important;
+    }
+    .select-emoji {
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 48px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.7rem;
+      color: var(--primary);
+      pointer-events: none;
+      filter: drop-shadow(0 2px 8px #7c3aed33);
+      background: none;
+      z-index: 2;
+    }
+    .support-row {
+      display: flex;
+      gap: 4%;
+      margin-bottom: 18px;
+    }
+    .support-row input {
+      width: 48%;
+    }
+    #supportForm input, #supportForm textarea {
+      font-size: 1.09rem;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 14px;
+      background: #23244a;
+      color: #f8fafc;
+      transition: box-shadow 0.2s, background 0.2s;
+      box-shadow: 0 2px 8px #7c3aed33;
+      outline: none;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    #supportForm input:focus, #supportForm textarea:focus {
+      background: #2d2e4a;
+      box-shadow: 0 0 0 2.5px var(--secondary);
+    }
+    #supportForm textarea { min-height: 110px; resize: vertical; }
+    #supportForm input::placeholder, #supportForm textarea::placeholder {
+      color: #b7cfff;
+      opacity: 1;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+    #supportForm button.copy-btn {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.25rem;
+      font-weight: bold;
+      letter-spacing: 0.04em;
+      box-shadow: 0 2px 16px #7c3aed55;
+      transition: background 0.3s, transform 0.18s;
+      cursor: pointer;
+      outline: none;
+      min-width: 180px;
+      min-height: 58px;
+      max-width: 340px;
+      width: 100%;
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px;
+      margin: 24px auto 0 auto;
+      font-family: inherit;
+    }
+    #supportForm button.copy-btn:active {transform: scale(0.97);}
+    #supportForm .tips {color: var(--secondary);}
+    #feedback {
+      border-radius: 8px;
+      font-size: 1.07rem;
+      padding: 10px 8px;
+      margin-top: 8px;
+      min-height: 24px;
+      text-align: center;
+      font-weight: 600;
+      background: rgba(56,189,248,0.07);
+      color: var(--primary);
+      box-shadow: 0 2px 10px #38bdf822;
+      transition: background 0.2s, color 0.2s;
+    }
+    #feedback.success { background: #e4ffe0; color: #237b1f; }
+    #feedback.error { background: #ffe4e4; color: #b22222; }
+    #feedback.info { background: #e0e6f1; color: #4f7cff; }
+  </style>
 </head>
 <body>
-    <canvas id="stars-bg"></canvas>
-    <nav>
-        <ul>
-            <li><a href="#home" class="active">Accueil</a></li>
-            <li><a href="#gallery">Galerie</a></li>
-            <li><a href="#features">Fonctionnalités</a></li>
-            <li><a href="#support">Support</a></li>
-            <li><a href="#social">Réseaux</a></li>
-        </ul>
-    </nav>
+  <canvas id="stars-bg"></canvas>
+  <nav>
+    <div class="nav-content">
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><i class="fas fa-bars"></i></button>
+      <ul id="mainNav">
+        <li><a href="#home" class="active">Accueil</a></li>
+        <li><a href="#gallery">Galerie</a></li>
+        <li><a href="#features">Fonctionnalités</a></li>
+        <li><a href="#support">Support</a></li>
+        <li><a href="#social">Réseaux</a></li>
+      </ul>
+    </div>
+  </nav>
 
-    <section id="home" class="hero">
-        <h1 class="hero-title">Lumina RP</h1>
-        <div class="hero-slogan">
-            Le serveur Fortnite RP nouvelle génération.<br />
-            <span style="color:#38bdf8;font-weight:700;">Rejoignez l'expérience communautaire ultime !</span>
-        </div>
-        <div id="map-code-bloc" class="map-code-bloc">
-            <div class="map-code-title">Code de la map</div>
-            <div class="map-code-header">
-                <span class="map-value" id="mapCode">0000-0000-0000</span>
-                <button class="copy-btn" id="copyBtn" title="Copier le code">
-                    <i class="fas fa-copy"></i>
-                </button>
-            </div>
-            <div class="copy-confirm" id="copyConfirmation">Code copié !</div>
-        </div>
-    </section>
-
-    <section id="gallery" class="gallery-section">
-        <div class="gallery-title">Galerie du serveur</div>
-        <div class="gallery-slider">
-            <button class="gallery-arrow" id="galleryPrev" type="button">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <div class="gallery-imgs" id="galleryImgs">
-                <img
-                  src="https://media.discordapp.net/attachments/1365769100286103604/1368353780969640077/image.png?ex=68231f04&is=6821cd84&hm=c5c691bafc497e1cda7ee9e7c1213a65cfe06cc9f4c0bbf17c61893ab2110e5e&=&format=webp&quality=lossless&width=626&height=833"
-                  alt="Image 1 Lumina RP"
-                />
-                <img
-                  src="https://media.discordapp.net/attachments/1365769100286103604/1368940567077191750/image.png?ex=68229e80&is=68214d00&hm=e761ce9e2b9915a1c00d3c24cbea2d1cb5203162d358dc407bd9ef3d592c531f&=&format=webp&quality=lossless&width=605&height=359"
-                  alt="Image 2 Lumina RP"
-                />
-                <div class="gallery-video">
-                    <iframe
-                      src="https://www.youtube.com/embed/i1l-WeFsvxE"
-                      title="Le Restaurant 'Quikc' du serveur Lumina RP sur Fortnite"
-                      allowfullscreen
-                    ></iframe>
-                </div>
-                <div class="gallery-video">
-                    <iframe
-                      src="https://www.youtube.com/embed/TGyiRk0ASIQ"
-                      title="Vidéo Lumina RP"
-                      allowfullscreen
-                    ></iframe>
-                </div>
-            </div>
-            <button class="gallery-arrow" id="galleryNext" type="button">
-                <i class="fas fa-chevron-right"></i>
-            </button>
-        </div>
-    </section>
-
-    <section id="features" class="section">
-        <div class="features-grid">
-            <div class="feature-card">
-                <i class="fas fa-users" style="color: var(--secondary)"></i>
-                <h3>Communauté active</h3>
-                <p>
-                  <strong id="discordMembers">…</strong> membres actifs, staff à l’écoute,
-                  joueurs passionnés.
-                </p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-map-marked-alt" style="color: var(--primary)"></i>
-                <h3>Carte unique</h3>
-                <p>Une <strong>map Fortnite RP exclusive</strong>, détaillée et évolutive.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-calendar-alt" style="color: var(--secondary)"></i>
-                <h3>Événements réguliers</h3>
-                <p><strong>Compétitions</strong>, soirées RP, animations chaque semaine.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-shield-alt" style="color: var(--primary)"></i>
-                <h3>Sécurité & modération</h3>
-                <p><strong>Modération réactive</strong>, règles claires, environnement sain.</p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-hard-hat" style="color: #38bdf8"></i>
-                <h3>Recrutement actif</h3>
-                <p>
-                  Nous recrutons <strong>builders</strong> et <strong>staff</strong> pour
-                  rejoindre notre équipe et faire grandir le serveur !
-                </p>
-            </div>
-            <div class="feature-card">
-                <i class="fas fa-scroll" style="color: #38bdf8"></i>
-                <h3>Quêtes & missions RP</h3>
-                <p>Des <strong>quêtes scénarisées</strong> et des missions inédites chaque semaine !</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="support" class="section">
-      <div class="support-form" style="max-width: 600px; margin: 0 auto">
-        <h2>Support Technique</h2>
-        <form id="supportForm" autocomplete="off" novalidate>
-          <label for="problem-type" class="support-label">Type de problème <span>*</span></label>
-          <div class="select-wrapper">
-            <select id="problem-type" name="problem-type" required>
-              <option value="" disabled selected hidden>-- Sélectionnez un type --</option>
-              <option value="Problème technique">⚙️ Problème technique</option>
-              <option value="Problème session">🕒 Problème session</option>
-              <option value="Signaler joueur">🚩 Signaler joueur</option>
-              <option value="Recrutement">🎯 Recrutement</option>
-              <option value="Autre">❓ Autre</option>
-            </select>
-            <span class="select-emoji" id="selectedEmoji">❔</span>
-          </div>
-          <div class="support-row">
-            <div style="width: 48%">
-              <label for="fortnite" class="support-label">Pseudo Fortnite <span>*</span></label>
-              <input type="text" id="fortnite" name="fortnite" maxlength="32" placeholder="Ex: MonPseudoFN" required autocomplete="off" />
-            </div>
-            <div style="width: 48%">
-              <label for="pseudo" class="support-label">Pseudo Discord <span>*</span></label>
-              <input type="text" id="pseudo" name="pseudo" maxlength="32" placeholder="Ex: MonPseudo#0000" required autocomplete="off" />
-            </div>
-          </div>
-          <label for="problem" class="support-label">Décris ton problème <span>*</span></label>
-          <textarea id="problem" name="problem" required placeholder="Explique ici ce dont tu as besoin..." autocomplete="off"></textarea>
-          <button type="submit" class="copy-btn">
-            <i class="fas fa-paper-plane"></i> Envoyer au support
-          </button>
-          <div class="tips" style="font-size: 0.97rem; opacity: 0.85; margin-top: 8px; color: var(--secondary)">
-            ⚡️ Le support vous répondra sur Discord dès que possible.
-          </div>
-          <div id="feedback" role="alert" aria-live="assertive" style="margin-top: 10px"></div>
-        </form>
+  <section id="home" class="hero">
+    <h1 class="hero-title">Lumina RP</h1>
+    <div class="hero-slogan">
+      Le serveur Fortnite RP nouvelle génération.<br />
+      <span style="color:#38bdf8;font-weight:700;">Rejoignez l'expérience communautaire ultime !</span>
+    </div>
+    <div id="map-code-bloc" class="map-code-bloc">
+      <div class="map-code-title styled-title">
+        <i class="fas fa-map-marked-alt"></i>
+        <span>Code de la map</span>
       </div>
-    </section>
-
-    <section id="social" class="section">
-      <div class="social-links">
-        <a class="discord" href="https://discord.gg/luminarp" target="_blank" title="Discord" rel="noopener noreferrer"><i class="fab fa-discord"></i></a>
-        <a class="youtube" href="https://www.youtube.com/@Lumina-RP" target="_blank" title="YouTube" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
-        <a class="tiktok" href="https://www.tiktok.com/@lumina_rp" target="_blank" title="TikTok" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
+      <div class="map-code-header">
+        <span class="map-value" id="mapCode">0000-0000-0000</span>
+        <button class="copy-btn" id="copyBtn" title="Copier le code">
+          <i class="fas fa-copy"></i>
+        </button>
       </div>
-    </section>
+      <div class="copy-confirm" id="copyConfirmation">Code copié !</div>
+    </div>
+  </section>
 
-    <script>
-      // FOND ÉTOILES INTERACTIF
-      const canvas = document.getElementById('stars-bg');
-      const ctx = canvas.getContext('2d');
-      let stars = [];
-      let w = window.innerWidth, h = window.innerHeight;
-      let mouse = {x: w/2, y: h/2};
+  <section id="gallery" class="gallery-section">
+    <div class="gallery-title">Galerie du serveur</div>
+    <div class="gallery-slider">
+      <button class="gallery-arrow" id="galleryPrev" type="button" aria-label="Image précédente">
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <div class="gallery-imgs" id="galleryImgs" tabindex="0" aria-live="polite" aria-label="Galerie d'images et vidéos">
+        <img src="https://media.discordapp.net/attachments/1365769100286103604/1368353780969640077/image.png?ex=68231f04&is=6821cd84&hm=c5c691bafc497e1cda7ee9e7c1213a65cfe06cc9f4c0bbf17c61893ab2110e5e&=&format=webp&quality=lossless&width=626&height=833" alt="Image 1 Lumina RP" />
+        <img src="https://media.discordapp.net/attachments/1365769100286103604/1368940567077191750/image.png?ex=68229e80&is=68214d00&hm=e761ce9e2b9915a1c00d3c24cbea2d1cb5203162d358dc407bd9ef3d592c531f&=&format=webp&quality=lossless&width=605&height=359" alt="Image 2 Lumina RP" />
+        <div class="gallery-video" role="group" aria-label="Vidéo Le Restaurant 'Quikc'">
+          <iframe src="https://www.youtube.com/embed/i1l-WeFsvxE" title="Le Restaurant 'Quikc' du serveur Lumina RP sur Fortnite" allowfullscreen></iframe>
+        </div>
+        <div class="gallery-video" role="group" aria-label="Vidéo Lumina RP">
+          <iframe src="https://www.youtube.com/embed/TGyiRk0ASIQ" title="Vidéo Lumina RP" allowfullscreen></iframe>
+        </div>
+      </div>
+      <button class="gallery-arrow" id="galleryNext" type="button" aria-label="Image suivante">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+  </section>
 
-      function resizeStars() {
-        w = window.innerWidth; h = window.innerHeight;
-        canvas.width = w; canvas.height = h;
-        stars = [];
-        const density = Math.min(120, Math.floor((w*h)/9000));
-        for(let i=0;i<density;i++) {
-          stars.push({
-            x: Math.random()*w,
-            y: Math.random()*h,
-            r: Math.random()*1.3+0.4,
-            speed: Math.random()*0.18+0.02,
-            angle: Math.random()*Math.PI*2,
-            baseAngle: Math.random()*Math.PI*2,
-            parallax: Math.random()*0.5+0.5
-          });
-        }
-      }
-      window.addEventListener('resize', resizeStars);
-      resizeStars();
+  <section id="features" class="section">
+    <div class="features-grid">
+      <div class="feature-card">
+        <i class="fas fa-users" style="color: var(--secondary)"></i>
+        <h3>Communauté active</h3>
+        <p>
+          <strong id="discordMembers">…</strong> membres actifs, staff à l’écoute,
+          joueurs passionnés.
+        </p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-map-marked-alt" style="color: var(--primary)"></i>
+        <h3>Carte unique</h3>
+        <p>Une <strong>map Fortnite RP exclusive</strong>, détaillée et évolutive.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-calendar-alt" style="color: var(--secondary)"></i>
+        <h3>Événements réguliers</h3>
+        <p><strong>Compétitions</strong>, soirées RP, animations chaque semaine.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-shield-alt" style="color: var(--primary)"></i>
+        <h3>Sécurité & modération</h3>
+        <p><strong>Modération réactive</strong>, règles claires, environnement sain.</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-hard-hat" style="color: #38bdf8"></i>
+        <h3>Recrutement actif</h3>
+        <p>
+          Nous recrutons <strong>builders</strong> et <strong>staff</strong> pour
+          rejoindre notre équipe et faire grandir le serveur !
+        </p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-scroll" style="color: #38bdf8"></i>
+        <h3>Quêtes & missions RP</h3>
+        <p>Des <strong>quêtes scénarisées</strong> et des missions inédites chaque semaine !</p>
+      </div>
+    </div>
+  </section>
 
-      window.addEventListener('mousemove', e=>{
-        mouse.x = e.clientX; mouse.y = e.clientY;
-      });
+  <section id="support" class="section">
+    <div class="support-form" style="max-width: 600px; margin: 0 auto">
+      <h2>Support Technique</h2>
+      <form id="supportForm" autocomplete="off" novalidate>
+        <label for="problem-type" class="support-label">Type de problème <span>*</span></label>
+        <div class="select-wrapper">
+          <select id="problem-type" name="problem-type" required>
+            <option value="" disabled selected hidden>-- Sélectionnez un type --</option>
+            <option value="Problème technique">⚙️ Problème technique</option>
+            <option value="Problème session">🕒 Problème session</option>
+            <option value="Signaler joueur">🚩 Signaler joueur</option>
+            <option value="Recrutement">🎯 Recrutement</option>
+            <option value="Autre">❓ Autre</option>
+          </select>
+          <span class="select-emoji" id="selectedEmoji">❔</span>
+        </div>
+        <div class="support-row">
+          <div style="width: 48%">
+            <label for="fortnite" class="support-label">Pseudo Fortnite <span>*</span></label>
+            <input type="text" id="fortnite" name="fortnite" maxlength="32" placeholder="Ex: MonPseudoFN" required autocomplete="off" />
+          </div>
+          <div style="width: 48%">
+            <label for="pseudo" class="support-label">Pseudo Discord <span>*</span></label>
+            <input type="text" id="pseudo" name="pseudo" maxlength="32" placeholder="Ex: MonPseudo#0000" required autocomplete="off" />
+          </div>
+        </div>
+        <label for="problem" class="support-label">Décris ton problème <span>*</span></label>
+        <textarea id="problem" name="problem" required placeholder="Explique ici ce dont tu as besoin..." autocomplete="off"></textarea>
+        <button type="submit" class="copy-btn">
+          <i class="fas fa-paper-plane"></i> Envoyer au support
+        </button>
+        <div class="tips" style="font-size: 0.97rem; opacity: 0.85; margin-top: 8px; color: var(--secondary)">
+          ⚡️ Le support vous répondra sur Discord dès que possible.
+        </div>
+        <div id="feedback" role="alert" aria-live="assertive" style="margin-top: 10px"></div>
+      </form>
+    </div>
+  </section>
 
-      function animateStars() {
-        ctx.clearRect(0,0,w,h);
-        for(const star of stars) {
-          // Parallaxe selon la position du curseur
-          let px = (mouse.x-w/2)/w*star.parallax*60;
-          let py = (mouse.y-h/2)/h*star.parallax*60;
-          // Mouvement lent
-          star.angle += star.speed/60;
-          let dx = Math.cos(star.baseAngle+star.angle)*star.parallax*8;
-          let dy = Math.sin(star.baseAngle+star.angle)*star.parallax*8;
-          ctx.beginPath();
-          ctx.arc(star.x+dx+px, star.y+dy+py, star.r, 0, Math.PI*2);
-          ctx.fillStyle = "rgba(255,255,255,"+(0.7+Math.sin(star.angle)*0.3)+")";
-          ctx.shadowColor = "#38bdf8";
-          ctx.shadowBlur = 8*star.parallax;
-          ctx.fill();
-        }
-        ctx.shadowBlur = 0;
-        requestAnimationFrame(animateStars);
-      }
-      animateStars();
+  <section id="social" class="section">
+    <div class="social-links">
+      <a class="discord" href="https://discord.gg/luminarp" target="_blank" title="Discord" rel="noopener noreferrer"><i class="fab fa-discord"></i></a>
+      <a class="youtube" href="https://www.youtube.com/@Lumina-RP" target="_blank" title="YouTube" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
+      <a class="tiktok" href="https://www.tiktok.com/@lumina_rp" target="_blank" title="TikTok" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
+    </div>
+  </section>
 
-      // Galerie slider
-      document.getElementById('galleryPrev').addEventListener('click', function () {
-        document.getElementById('galleryImgs').scrollBy({ left: -300, behavior: 'smooth' });
-      });
-      document.getElementById('galleryNext').addEventListener('click', function () {
-        document.getElementById('galleryImgs').scrollBy({ left: 300, behavior: 'smooth' });
-      });
-
-      // Bloc code map : copie
-      document.getElementById('copyBtn').onclick = function () {
-        const code = document.getElementById('mapCode').innerText;
-        navigator.clipboard.writeText(code).then(() => {
-          const btn = document.getElementById('copyBtn');
-          const codeSpan = document.getElementById('mapCode');
-          btn.classList.add('copied');
-          codeSpan.classList.add('copied');
-          document.getElementById('copyConfirmation').style.display = 'block';
-          setTimeout(() => {
-            btn.classList.remove('copied');
-            codeSpan.classList.remove('copied');
-            document.getElementById('copyConfirmation').style.display = 'none';
-          }, 1500);
+  <script>
+    // FOND ÉTOILES INTERACTIF
+    const canvas = document.getElementById('stars-bg');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    let w = window.innerWidth, h = window.innerHeight;
+    let mouse = {x: w/2, y: h/2};
+    function resizeStars() {
+      w = window.innerWidth; h = window.innerHeight;
+      canvas.width = w; canvas.height = h;
+      stars = [];
+      const density = Math.min(120, Math.floor((w*h)/9000));
+      for(let i=0;i<density;i++) {
+        stars.push({
+          x: Math.random()*w,
+          y: Math.random()*h,
+          r: Math.random()*1.3+0.4,
+          speed: Math.random()*0.18+0.02,
+          angle: Math.random()*Math.PI*2,
+          baseAngle: Math.random()*Math.PI*2,
+          parallax: Math.random()*0.5+0.5
         });
-      };
-
-      // Support technique menu emoji dynamique (corrigé)
-      const emojiByType = {
-        "Problème technique": "⚙️",
-        "Problème session": "🕒",
-        "Signaler joueur": "🚩",
-        "Recrutement": "🎯",
-        "Autre": "❓"
-      };
-      const selectType = document.getElementById('problem-type');
-      const selectEmoji = document.getElementById('selectedEmoji');
-      selectType.addEventListener('change', function () {
-        selectEmoji.textContent = emojiByType[this.value] || '❔';
-      });
-
-      // Anti spam/cooldown
-      const COOLDOWN_MS = 5 * 60 * 1000;
-      const COOLDOWN_KEY = 'support_last_request';
-      function getCooldownRemaining() {
-        const last = parseInt(localStorage.getItem(COOLDOWN_KEY) || '0', 10);
-        const now = Date.now();
-        return Math.max(0, last + COOLDOWN_MS - now);
       }
-      function containsBlacklisted(str) {
-        if (!str) return false;
-        const s = str.toLowerCase();
-        return s.includes('@everyone') || s.includes('@here');
+    }
+    window.addEventListener('resize', resizeStars);
+    resizeStars();
+    window.addEventListener('mousemove', e=>{
+      mouse.x = e.clientX; mouse.y = e.clientY;
+    });
+    function animateStars() {
+      ctx.clearRect(0,0,w,h);
+      for(const star of stars) {
+        let px = (mouse.x-w/2)/w*star.parallax*60;
+        let py = (mouse.y-h/2)/h*star.parallax*60;
+        star.angle += star.speed/60;
+        let dx = Math.cos(star.baseAngle+star.angle)*star.parallax*8;
+        let dy = Math.sin(star.baseAngle+star.angle)*star.parallax*8;
+        ctx.beginPath();
+        ctx.arc(star.x+dx+px, star.y+dy+py, star.r, 0, Math.PI*2);
+        ctx.fillStyle = "rgba(255,255,255,"+(0.7+Math.sin(star.angle)*0.3)+")";
+        ctx.shadowColor = "#38bdf8";
+        ctx.shadowBlur = 8*star.parallax;
+        ctx.fill();
       }
-      document.getElementById('supportForm').addEventListener('submit', async function (e) {
-        e.preventDefault();
-        const feedback = document.getElementById('feedback');
-        feedback.textContent = '';
-        feedback.className = '';
-        const cooldown = getCooldownRemaining();
-        if (cooldown > 0) {
-          const min = Math.floor(cooldown / 60000);
-          const sec = Math.floor((cooldown % 60000) / 1000);
-          feedback.textContent = `⏳ Merci d'attendre ${min ? min + ' min ' : ''}${sec} sec avant de refaire une demande.`;
-          feedback.className = 'error';
-          return;
-        }
-        const problemTypeSelect = document.getElementById('problem-type');
-        const problemType = problemTypeSelect.value.trim();
-        const pseudo = document.getElementById('pseudo').value.trim();
-        const fortnite = document.getElementById('fortnite').value.trim();
-        const problem = document.getElementById('problem').value.trim();
-        if (
-          containsBlacklisted(problemType) ||
-          containsBlacklisted(pseudo) ||
-          containsBlacklisted(fortnite) ||
-          containsBlacklisted(problem)
-        ) {
-          feedback.textContent = "❌ L'utilisation de '@everyone' ou '@here' est interdite dans tous les champs.";
-          feedback.className = 'error';
-          return;
-        }
-        if (!problemType) {
-          feedback.textContent = 'Merci de sélectionner un type de problème.';
-          feedback.className = 'error';
-          problemTypeSelect.focus();
-          return;
-        }
-        if (!pseudo || !fortnite || !problem) {
-          feedback.textContent = 'Merci de remplir tous les champs obligatoires.';
-          feedback.className = 'error';
-          return;
-        }
-        feedback.textContent = 'Envoi en cours...';
-        feedback.className = 'info';
-        const emoji = emojiByType[problemType] || '❓';
-        const WEBHOOK_URL =
-          'https://discord.com/api/webhooks/1371135623053967370/waterVoY1psB38R48x1jaiVTiuPA8UCJjA2jWUOdxhcYn2JKGYKgKPEZbns2RUgSNwlG';
-        const body = {
-          username: 'Support Web',
-          avatar_url: 'https://cdn-icons-png.flaticon.com/512/561/561127.png',
-          embeds: [
-            {
-              title: `${emoji} Nouvelle demande de support`,
-              color: 0x7c3aed,
-              fields: [
-                { name: 'Type', value: `${emoji} ${problemType}`, inline: true },
-                { name: 'Pseudo Fortnite', value: fortnite, inline: true },
-                { name: 'Pseudo Discord', value: pseudo, inline: true },
-                { name: 'Texte', value: problem },
-              ],
-              footer: { text: 'Lumina RP Support' },
-              timestamp: new Date().toISOString(),
-            },
-          ],
-        };
-        try {
-          const res = await fetch(WEBHOOK_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body),
-          });
-          if (res.ok) {
-            feedback.textContent = '✅ Votre demande a bien été envoyée ! Le support vous répondra sur Discord.';
-            feedback.className = 'success';
-            localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
-            this.reset();
-            selectEmoji.textContent = '❔';
-          } else {
-            feedback.textContent = "❌ Erreur lors de l'envoi, veuillez réessayer plus tard.";
-            feedback.className = 'error';
-          }
-        } catch {
-          feedback.textContent = '❌ Erreur réseau. Vérifiez votre connexion.';
-          feedback.className = 'error';
-        }
-      });
+      ctx.shadowBlur = 0;
+      requestAnimationFrame(animateStars);
+    }
+    animateStars();
 
-      // Discord membres dynamiques
-      fetch('https://discord.com/api/v9/invites/luminarp?with_counts=true')
-        .then((r) => r.json())
-        .then((data) => {
-          if (data && data.approximate_member_count) {
-            document.getElementById('discordMembers').textContent = data.approximate_member_count.toLocaleString('fr-FR');
-          } else {
-            document.getElementById('discordMembers').textContent = 'plusieurs milliers de';
-          }
-        })
-        .catch(() => {
+    // MENU BURGER MOBILE
+    const navToggle = document.getElementById('navToggle');
+    const mainNav = document.getElementById('mainNav');
+    navToggle.addEventListener('click', function() {
+      mainNav.classList.toggle('open');
+    });
+    mainNav.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if(window.innerWidth <= 800) mainNav.classList.remove('open');
+      });
+    });
+
+    // Galerie slider esthétique et bloquée
+    const galleryImgs = document.getElementById('galleryImgs');
+    const btnPrev = document.getElementById('galleryPrev');
+    const btnNext = document.getElementById('galleryNext');
+    const galleryItems = galleryImgs.children;
+    let currentIndex = 0;
+    function updateGalleryArrows() {
+      const itemWidth = galleryItems[0].offsetWidth + 16;
+      const visibleItems = Math.floor(galleryImgs.offsetWidth / itemWidth);
+      const maxIndex = galleryItems.length - visibleItems;
+      btnPrev.disabled = currentIndex <= 0;
+      btnNext.disabled = currentIndex >= maxIndex;
+    }
+    function scrollToIndex(idx) {
+      const itemWidth = galleryItems[0].offsetWidth + 16;
+      galleryImgs.scrollTo({left: idx * itemWidth, behavior: 'smooth'});
+      currentIndex = idx;
+      setTimeout(updateGalleryArrows, 400);
+    }
+    btnPrev.addEventListener('click', () => {
+      if(currentIndex > 0) scrollToIndex(currentIndex - 1);
+    });
+    btnNext.addEventListener('click', () => {
+      const itemWidth = galleryItems[0].offsetWidth + 16;
+      const visibleItems = Math.floor(galleryImgs.offsetWidth / itemWidth);
+      const maxIndex = galleryItems.length - visibleItems;
+      if(currentIndex < maxIndex) scrollToIndex(currentIndex + 1);
+    });
+    galleryImgs.addEventListener('scroll', () => {
+      const itemWidth = galleryItems[0].offsetWidth + 16;
+      const visibleItems = Math.floor(galleryImgs.offsetWidth / itemWidth);
+      const maxIndex = galleryItems.length - visibleItems;
+      let idx = Math.round(galleryImgs.scrollLeft / itemWidth);
+      if(idx < 0) idx = 0;
+      if(idx > maxIndex) idx = maxIndex;
+      currentIndex = idx;
+      updateGalleryArrows();
+    });
+    window.addEventListener('load', updateGalleryArrows);
+    window.addEventListener('resize', updateGalleryArrows);
+
+    // Bloc code map : copie
+    document.getElementById('copyBtn').onclick = function () {
+      const code = document.getElementById('mapCode').innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        const btn = document.getElementById('copyBtn');
+        const codeSpan = document.getElementById('mapCode');
+        btn.classList.add('copied');
+        codeSpan.classList.add('copied');
+        document.getElementById('copyConfirmation').style.display = 'block';
+        setTimeout(() => {
+          btn.classList.remove('copied');
+          codeSpan.classList.remove('copied');
+          document.getElementById('copyConfirmation').style.display = 'none';
+        }, 1500);
+      });
+    };
+
+    // Support technique menu emoji dynamique (corrigé)
+    const emojiByType = {
+      "Problème technique": "⚙️",
+      "Problème session": "🕒",
+      "Signaler joueur": "🚩",
+      "Recrutement": "🎯",
+      "Autre": "❓"
+    };
+    const selectType = document.getElementById('problem-type');
+    const selectEmoji = document.getElementById('selectedEmoji');
+    selectType.addEventListener('change', function () {
+      selectEmoji.textContent = emojiByType[this.value] || '❔';
+    });
+
+    // Anti spam/cooldown
+    const COOLDOWN_MS = 5 * 60 * 1000;
+    const COOLDOWN_KEY = 'support_last_request';
+    function getCooldownRemaining() {
+      const last = parseInt(localStorage.getItem(COOLDOWN_KEY) || '0', 10);
+      const now = Date.now();
+      return Math.max(0, last + COOLDOWN_MS - now);
+    }
+    function containsBlacklisted(str) {
+      if (!str) return false;
+      const s = str.toLowerCase();
+      return s.includes('@everyone') || s.includes('@here');
+    }
+    document.getElementById('supportForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = '';
+      feedback.className = '';
+      const cooldown = getCooldownRemaining();
+      if (cooldown > 0) {
+        const min = Math.floor(cooldown / 60000);
+        const sec = Math.floor((cooldown % 60000) / 1000);
+        feedback.textContent = `⏳ Merci d'attendre ${min ? min + ' min ' : ''}${sec} sec avant de refaire une demande.`;
+        feedback.className = 'error';
+        return;
+      }
+      const problemTypeSelect = document.getElementById('problem-type');
+      const problemType = problemTypeSelect.value.trim();
+      const pseudo = document.getElementById('pseudo').value.trim();
+      const fortnite = document.getElementById('fortnite').value.trim();
+      const problem = document.getElementById('problem').value.trim();
+      if (
+        containsBlacklisted(problemType) ||
+        containsBlacklisted(pseudo) ||
+        containsBlacklisted(fortnite) ||
+        containsBlacklisted(problem)
+      ) {
+        feedback.textContent = "❌ L'utilisation de '@everyone' ou '@here' est interdite dans tous les champs.";
+        feedback.className = 'error';
+        return;
+      }
+      if (!problemType) {
+        feedback.textContent = 'Merci de sélectionner un type de problème.';
+        feedback.className = 'error';
+        problemTypeSelect.focus();
+        return;
+      }
+      if (!pseudo || !fortnite || !problem) {
+        feedback.textContent = 'Merci de remplir tous les champs obligatoires.';
+        feedback.className = 'error';
+        return;
+      }
+      feedback.textContent = 'Envoi en cours...';
+      feedback.className = 'info';
+      const emoji = emojiByType[problemType] || '❓';
+      const WEBHOOK_URL =
+        'https://discord.com/api/webhooks/1371135623053967370/waterVoY1psB38R48x1jaiVTiuPA8UCJjA2jWUOdxhcYn2JKGYKgKPEZbns2RUgSNwlG';
+      const body = {
+        username: 'Support Web',
+        avatar_url: 'https://cdn-icons-png.flaticon.com/512/561/561127.png',
+        embeds: [
+          {
+            title: `${emoji} Nouvelle demande de support`,
+            color: 0x7c3aed,
+            fields: [
+              { name: 'Type', value: `${emoji} ${problemType}`, inline: true },
+              { name: 'Pseudo Fortnite', value: fortnite, inline: true },
+              { name: 'Pseudo Discord', value: pseudo, inline: true },
+              { name: 'Texte', value: problem },
+            ],
+            footer: { text: 'Lumina RP Support' },
+            timestamp: new Date().toISOString(),
+          },
+        ],
+      };
+      try {
+        const res = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        if (res.ok) {
+          feedback.textContent = '✅ Votre demande a bien été envoyée ! Le support vous répondra sur Discord.';
+          feedback.className = 'success';
+          localStorage.setItem(COOLDOWN_KEY, Date.now().toString());
+          this.reset();
+          selectEmoji.textContent = '❔';
+        } else {
+          feedback.textContent = "❌ Erreur lors de l'envoi, veuillez réessayer plus tard.";
+          feedback.className = 'error';
+        }
+      } catch {
+        feedback.textContent = '❌ Erreur réseau. Vérifiez votre connexion.';
+        feedback.className = 'error';
+      }
+    });
+
+    // Discord membres dynamiques
+    fetch('https://discord.com/api/v9/invites/luminarp?with_counts=true')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data && data.approximate_member_count) {
+          document.getElementById('discordMembers').textContent = data.approximate_member_count.toLocaleString('fr-FR');
+        } else {
           document.getElementById('discordMembers').textContent = 'plusieurs milliers de';
-        });
-    </script>
+        }
+      })
+      .catch(() => {
+        document.getElementById('discordMembers').textContent = 'plusieurs milliers de';
+      });
+  </script>
 </body>
 </html>
